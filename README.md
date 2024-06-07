@@ -3,6 +3,16 @@
 **Description:**
 The Cricbuzz Backend is a Spring Boot application that manages cricket-related data. It provides APIs to handle tasks like storing and retrieving player and team scores, updating match details, and deleting unnecessary data.
 
+ChatGPT
+
+Tech Stack:
+
+    Framework: Spring Boot
+    IDE: IntelliJ IDEA
+    Database: PostgreSQL
+    ORM: Spring Data JPA
+    Lombok: for reducing boilerplate code and enhancing productivity.
+
 **Setup:**
 
 1. **Clone the Repository:**
