@@ -1,5 +1,6 @@
 package com.cricbuzz.Controller;
 
+import com.cricbuzz.Dto.PlayerDto;
 import com.cricbuzz.Dto.PlayerScoreDto;
 import com.cricbuzz.Service.PlayerScoreService;
 import io.swagger.annotations.ApiOperation;
@@ -8,19 +9,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @CrossOrigin("*")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/player-score")
 public class PlayerScoreController {
 
-    private PlayerScoreService playerScoreService;
+    private final PlayerScoreService playerScoreService;
 
     @PostMapping
     @ApiOperation(value = "Create a New Player Score", response = PlayerScoreDto.class)
     public ResponseEntity<PlayerScoreDto> createPlayerScore(@RequestBody PlayerScoreDto playerScoreDto) {
         PlayerScoreDto savedPlayerScore = playerScoreService.addPlayerScore(playerScoreDto);
         return new ResponseEntity<>(savedPlayerScore, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PlayerScoreDto>> getAllPlayersScore() {
+        List<PlayerScoreDto> allPlayerScores = playerScoreService.getAllPlayerScore();
+        return new ResponseEntity<>(allPlayerScores, HttpStatus.OK);
     }
 
     @GetMapping("/{matchId}/{playerId}")
@@ -42,5 +52,12 @@ public class PlayerScoreController {
     public ResponseEntity<Void> deletePlayerByMatchIdPlayerId(@PathVariable long matchId, @PathVariable long playerId) {
         playerScoreService.deletePlayerScoreByMatchIdAndPlayerId(matchId, playerId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping("/bulk")
+    @ApiOperation(value = "Bulk Add Player Scores for a Match", response = List.class)
+    public ResponseEntity<List<PlayerScoreDto>> bulkAddPlayerScores(@RequestBody List<PlayerScoreDto> playerScores) {
+        List<PlayerScoreDto> savedPlayerScores = playerScoreService.bulkAddPlayerScores(playerScores);
+        return new ResponseEntity<>(savedPlayerScores, HttpStatus.CREATED);
     }
 }

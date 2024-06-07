@@ -10,7 +10,9 @@ import com.cricbuzz.Service.PlayerScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PlayerScoreServiceImpl implements PlayerScoreService {
@@ -51,6 +53,14 @@ public class PlayerScoreServiceImpl implements PlayerScoreService {
     }
 
     @Override
+    public List<PlayerScoreDto> getAllPlayerScore() {
+        List<PlayerScore> allPlayerScores = playerScoreRepository.findAll();
+        return allPlayerScores.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public PlayerScoreDto updatePlayerScoreByMatchIdAndPlayerId(long matchId, long playerId, PlayerScoreDto playerScoreDto) {
         Optional<PlayerScore> optionalPlayerScore = playerScoreRepository.findByMatchIdAndPlayerId(matchId, playerId);
         if (optionalPlayerScore.isPresent()) {
@@ -63,6 +73,24 @@ public class PlayerScoreServiceImpl implements PlayerScoreService {
             playerScoreRepository.save(playerScore);
         }
         return playerScoreDto;
+    }
+    @Override
+    public List<PlayerScoreDto> bulkAddPlayerScores(List<PlayerScoreDto> playerScoreDtos) {
+        List<PlayerScore> playerScores = playerScoreDtos.stream().map(playerScoreDto -> {
+            PlayerScore playerScore = new PlayerScore();
+            playerScore.setPlayer(getPlayerById(playerScoreDto.getPlayerId()));
+            playerScore.setMatch(getMatchById(playerScoreDto.getMatchId()));
+            playerScore.setTeam(getTeamById(playerScoreDto.getTeamId()));
+            playerScore.setRuns(playerScoreDto.getRuns());
+            playerScore.setBalls(playerScoreDto.getBalls());
+            playerScore.setFours(playerScoreDto.getFours());
+            playerScore.setSixes(playerScoreDto.getSixes());
+            playerScore.setWickets(playerScoreDto.getWickets());
+            return playerScore;
+        }).collect(Collectors.toList());
+
+        playerScores = playerScoreRepository.saveAll(playerScores);
+        return playerScores.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
     @Override

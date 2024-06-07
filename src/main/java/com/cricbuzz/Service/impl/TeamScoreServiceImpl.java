@@ -10,7 +10,9 @@ import com.cricbuzz.Service.TeamScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamScoreServiceImpl implements TeamScoreService {
@@ -39,6 +41,22 @@ public class TeamScoreServiceImpl implements TeamScoreService {
     }
 
     @Override
+    public List<TeamScoreDto> getAllTeamScores() {
+        List<TeamScore> allTeamScores = teamScoreRepository.findAll();
+        return allTeamScores.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<TeamScoreDto> getTeamScoresByMatchId(long matchId) {
+        List<TeamScore> teamScores = teamScoreRepository.findByMatchMatchId(matchId);
+        return teamScores.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public TeamScoreDto teamScoreMatchId(long matchId, long teamId) {
         Optional<TeamScore> teamScore = teamScoreRepository.findByMatchIdAndTeamId(matchId, teamId);
         return teamScore.map(this::convertToDto).orElse(null);
@@ -61,6 +79,23 @@ public class TeamScoreServiceImpl implements TeamScoreService {
         Optional<TeamScore> optionalTeamScore = teamScoreRepository.findByMatchIdAndTeamId(matchId, teamId);
         optionalTeamScore.ifPresent(teamScoreRepository::delete);
     }
+
+    @Override
+    public List<TeamScoreDto> bulkAddTeamScores(List<TeamScoreDto> teamScores) {
+        List<TeamScore> teamsScore  = teamScores.stream().map((TeamScoreDto teamScoreDto) -> {
+            TeamScore teamScore = new TeamScore();
+            teamScore.setMatch(getMatchById(teamScoreDto.getMatchId()));
+            teamScore.setTeam(getTeamById(teamScoreDto.getTeamId()));
+            teamScore.setScore(teamScoreDto.getScore());
+            teamScore.setWicket(teamScoreDto.getWicket());
+            teamScore.setOvers(teamScoreDto.getOvers());
+            return teamScore;
+        }).toList();
+
+        teamsScore = teamScoreRepository.saveAll(teamsScore);
+        return teamsScore.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
 
     private TeamScoreDto convertToDto(TeamScore teamScore) {
         return new TeamScoreDto(
