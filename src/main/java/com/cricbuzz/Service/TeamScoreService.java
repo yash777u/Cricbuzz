@@ -25,4 +25,5 @@ public interface TeamScoreService {
     void deleteTeamScoreMatchId(long matchId, long teamId);
 
     List<TeamScoreDto> bulkAddTeamScores(List<TeamScoreDto> teamScores);
+
 }

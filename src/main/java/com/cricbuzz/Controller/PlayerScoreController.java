@@ -1,6 +1,5 @@
 package com.cricbuzz.Controller;
 
-import com.cricbuzz.Dto.PlayerDto;
 import com.cricbuzz.Dto.PlayerScoreDto;
 import com.cricbuzz.Service.PlayerScoreService;
 import io.swagger.annotations.ApiOperation;
@@ -10,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @AllArgsConstructor
@@ -33,10 +31,17 @@ public class PlayerScoreController {
         return new ResponseEntity<>(allPlayerScores, HttpStatus.OK);
     }
 
+    @GetMapping("/match/{matchId}")
+    @ApiOperation(value = "Get Player Scores By Match ID", response = PlayerScoreDto.class)
+    public ResponseEntity<List<PlayerScoreDto>> getPlayerScoresByMatchId(@PathVariable long matchId) {
+        List<PlayerScoreDto> playerScores = playerScoreService.getPlayerByMatchId(matchId);
+        return new ResponseEntity<>(playerScores, HttpStatus.OK);
+    }
+
     @GetMapping("/{matchId}/{playerId}")
     @ApiOperation(value = "Get Player Score By MatchId and Player Id", response = PlayerScoreDto.class)
     public ResponseEntity<PlayerScoreDto> getPlayerByMatchIdPlayerId(@PathVariable long matchId, @PathVariable long playerId) {
-        PlayerScoreDto savedPlayer = playerScoreService.playerScoreByMatchIdAndPlayerId(matchId, playerId);
+        PlayerScoreDto savedPlayer = playerScoreService.playerScoreByMatchIdAndPlayerId(matchId,playerId);
         return new ResponseEntity<>(savedPlayer, HttpStatus.OK);
     }
 

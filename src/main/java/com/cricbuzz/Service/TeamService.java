@@ -1,6 +1,7 @@
 package com.cricbuzz.Service;
 
 import com.cricbuzz.Dto.PlayerDto;
+import com.cricbuzz.Dto.PlayerScoreDto;
 import com.cricbuzz.Dto.TeamDto;
 
 import java.util.List;
@@ -11,4 +12,5 @@ public interface TeamService {
     List<TeamDto> getAllTeams();
     void deleteTeamById(long teamId);
     void updateTeam(long teamID, TeamDto teamDto);
+
 }

@@ -13,7 +13,10 @@ public interface PlayerScoreService {
     List<PlayerScoreDto> bulkAddPlayerScores(List<PlayerScoreDto> playerScoreDtos);
 
     // Retrieve Player Score using Match Id & Player Id
-    PlayerScoreDto playerScoreByMatchIdAndPlayerId(long matchId, long playerId);
+    PlayerScoreDto playerScoreByMatchIdAndPlayerId(long matchId,long playerId);
+
+
+    List<PlayerScoreDto> getPlayerScoresByMatchId(long matchId);
 
     // Reterive all player Score
     public List<PlayerScoreDto> getAllPlayerScore();
@@ -23,4 +26,6 @@ public interface PlayerScoreService {
 
     // Delete Player Score using Match Id & Player Id
     void deletePlayerScoreByMatchIdAndPlayerId(long matchId, long playerId);
+
+    List<PlayerScoreDto> getPlayerByMatchId(long matchId);
 }

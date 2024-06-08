@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin("*")
 @AllArgsConstructor
 @RestController
 @RequestMapping("/api/team-score")
@@ -54,7 +55,7 @@ public class TeamScoreController {
         return new ResponseEntity<>(allTeamScores, HttpStatus.OK);
     }
 
-    @GetMapping("/match/{matchId}")
+    @GetMapping("/{matchId}")
     @ApiOperation(value = "Get Team Scores By Match Id", response = TeamScoreDto.class)
     public ResponseEntity<List<TeamScoreDto>> getTeamScoresByMatchId(@PathVariable long matchId) {
         List<TeamScoreDto> teamScores = teamScoreService.getTeamScoresByMatchId(matchId);

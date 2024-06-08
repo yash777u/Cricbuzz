@@ -53,6 +53,15 @@ public class PlayerScoreServiceImpl implements PlayerScoreService {
     }
 
     @Override
+    public List<PlayerScoreDto> getPlayerScoresByMatchId(long matchId) {
+        List<PlayerScore> playerScores = playerScoreRepository.findByMatchId(matchId);
+        return playerScores.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+
+    @Override
     public List<PlayerScoreDto> getAllPlayerScore() {
         List<PlayerScore> allPlayerScores = playerScoreRepository.findAll();
         return allPlayerScores.stream()
@@ -97,6 +106,14 @@ public class PlayerScoreServiceImpl implements PlayerScoreService {
     public void deletePlayerScoreByMatchIdAndPlayerId(long matchId, long playerId) {
         Optional<PlayerScore> optionalPlayerScore = playerScoreRepository.findByMatchIdAndPlayerId(matchId, playerId);
         optionalPlayerScore.ifPresent(playerScoreRepository::delete);
+    }
+
+    @Override
+    public List<PlayerScoreDto> getPlayerByMatchId(long matchId) {
+        List<PlayerScore> playerScores = playerScoreRepository.findByMatchId(matchId);
+        return playerScores.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 
     private PlayerScoreDto convertToDto(PlayerScore playerScore) {

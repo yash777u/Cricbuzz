@@ -27,7 +27,7 @@ public class MatchController {
         return new ResponseEntity<>(savedMatch, HttpStatus.CREATED);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/match/{id}")
     @ApiOperation(value = "Get a match by ID", response = MatchDto.class)
     public ResponseEntity<MatchDto> getMatchById(@PathVariable(value = "id") Long matchId) {
         MatchDto getMatch = matchService.getMatchById(matchId);
