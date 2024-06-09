@@ -26,6 +26,7 @@ public class PlayerScoreController {
     }
 
     @GetMapping
+    @ApiOperation(value = "Get All Player Score", response =  PlayerScoreDto.class)
     public ResponseEntity<List<PlayerScoreDto>> getAllPlayersScore() {
         List<PlayerScoreDto> allPlayerScores = playerScoreService.getAllPlayerScore();
         return new ResponseEntity<>(allPlayerScores, HttpStatus.OK);
